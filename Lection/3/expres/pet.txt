@@ -1,0 +1,4 @@
+{"Name":"Yurii","Color":"#000000","Age":"27","Kind":"Nastya"}
+{"Name":"Masha","Color":"#ffff00","Age":"27","Kind":"Nastya"}
+{"Name":"Sash","Color":"#000000","Age":"","Kind":""}
+{"Name":"asas","Color":"#ffffff","Age":"12","Kind":"yes"}
