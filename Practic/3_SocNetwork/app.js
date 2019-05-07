@@ -2,64 +2,28 @@ const express = require('express');
 const path = require('path');
 const app = express();
 const opn = require('opn');
-const config = require('./config.js');
+const config = require('./controllers/config');
+const db = require('./db/db');
+const createUser = require('./controllers/users/create_user');
+const all_users = require('./controllers/users/all_users');
+const all_usersID = require('./controllers/users/all_usersID');
+const findUser = require('./controllers/users/find_user');
+const error404 = require('./controllers/error404');
 
-const db = [
-    {
-        id: 1,
-        name: 'Yurii',
-        surname: 'Kniazyk',
-        password: '12345',
-        email: 'yurii.kniazyk@gmail.com'
-    }
-];
 const indexPath = path.join(__dirname, 'index.html');
 
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 
-
 app.get('/', (req, res) => {
     res.sendFile(indexPath)
 });
 
-app.post('/user', (req, res) => {
-    const {name, surname, password, email} = req.body;
-    const user = {
-        id: db.length + 1,
-        name,
-        surname,
-        password,
-        email
-    };
-    db.push(user);
-    console.log(db);
-    res.redirect('/');
-});
-
-app.get('/users', (req, res) => {
-    res.json(db);
-});
-
-app.get('/user/:id', (req, res) => {
-    const userId = req.params.id;
-
-    let user = db.find(user => user.id == userId);
-    if (!user) user = {Message: 'ERROR!!! User is not found!!!'};
-    res.json(user);
-});
-
-app.get('/find-user', (req, res) => {
-    const {name} = req.query;
-    
-    let user = db.filter(user => user.name.includes(name));
-    if (!user.length) user = {Message: 'ERROR!!! User is not found!!!'};
-    res.json(user);
-});
-
-app.use('*', (req, res)=> {
-    res.status(404).json({Message: 'Oops....Something went wrong....'});
-});
+app.post('/user', createUser);
+app.get('/users', all_users);
+app.get('/user/:id', all_usersID);
+app.get('/find-user', findUser);
+app.use('*', error404);
 
 app.listen(config.port, err => {
     if (err) console.log(err);
