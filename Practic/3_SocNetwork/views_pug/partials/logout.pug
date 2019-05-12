@@ -1,0 +1,9 @@
+doctype html
+html
+    head
+        title Welcome!
+    body
+        h1 Welcome to our site!
+        if myUser
+        p= 'Fullname: ' + myUser.name + ' ' + myUser.surname + ' '
+        a(href="/logout") Logout
