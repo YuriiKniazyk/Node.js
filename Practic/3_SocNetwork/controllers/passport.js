@@ -1,5 +1,4 @@
 let passport = require('passport');
-const config = require('./config');
 let UserModel = require('../db/dbSchema');
 let LocalStrategy = require('passport-local').Strategy;
 
@@ -9,25 +8,25 @@ passport.serializeUser(function (user, done) {
 
 passport.deserializeUser(function (_id, done) {
 
-    UserModel.findById(_id, function(err, user) {
-        done(err, user);
+    let user = UserModel.findById(_id, function(err, user) {
+    done(err, user);
     });
 });
 
-let s = new LocalStrategy(
+let strategyLocal = new LocalStrategy(
     {
         passwordField: 'password',
-        usernameField: 'email',
+        usernameField: 'name',
         passReqToCallback: true
     },
-    function (username, password, done) {
+    function (req, username, password, done) {
         console.log('u:',username, 'p:',password);
        
         try {
             let user = UserModel.findOne(
                 {
-                    username: username
-             //       password: password
+                    username: username,
+                    password: password
                 }
             );
             if (user) {
@@ -39,17 +38,6 @@ let s = new LocalStrategy(
             done(e);
         }
     }
-
-
-    // function(username, password, done) {
-    //     UserModel.findOne({ username: username }, function(err, user) {
-    //       if (err) { return done(err); }
-    //       if (!user) {
-    //         return done(null, false, { message: 'Incorrect username.' });
-    //       }
-    //       return done(null, user);
-    //     });
-    // }
 );
 
-passport.use('login', s);
+passport.use('login', strategyLocal);

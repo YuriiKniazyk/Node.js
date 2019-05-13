@@ -34,17 +34,17 @@ app.set('view engine', 'pug');
 app.get('/', (req, res) => {
     res.sendFile(indexPath);
 });
-
 app.post('/user', createUser);
-
-app.post('/login', passport.authenticate('login', { successRedirect: '/success',
-  failureRedirect: '/fail' }), loginUser);
-
+app.post('/login', passport.authenticate('login',{failureRedirect: '/fail', session: false}), loginUser);
 app.get('/users', all_users);
 app.get('/user/:id', all_usersID);
 app.get('/find-user', findUser);
 app.get('/people', addTofriend);
 app.post('/friend/:id', addUserToMyFriend);
+app.get('/logout', function (req, res) {
+    req.logout();
+    res.redirect('/');
+});
 
 app.use('*', error404);
 
