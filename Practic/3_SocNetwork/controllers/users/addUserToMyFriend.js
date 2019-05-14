@@ -1,10 +1,11 @@
 let mongoose = require('mongoose');
 let friendModel = require('../../db/friendDBSchema');
 let config = require('../config');
+const localStorage = require('../localStorage');
 
 module.exports = (req, res) => {
     const friendId = req.params.id;
-    const userId = config.curentUserId;
+    const userId = localStorage.getObjItem(config.curentUserKey)._id;
 
     mongoose.connect(config.mongourl, {useNewUrlParser: true}, function (err) {
         if (err) throw err;
@@ -18,5 +19,4 @@ module.exports = (req, res) => {
         friendModel.create(newFriend);
     })     
     res.sendStatus(200); 
-    //res.redirect('/people');
 };
