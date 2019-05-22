@@ -13,7 +13,11 @@ module.exports = (req, res) => {
         .exec(function(err, users) {
             if (err) throw err;
             if (!users.length) users = {Message: 'ERROR!!! User is not found!!!'};
-            res.json(users);
+            
+            res.render('find_people', {
+                title: 'Hello',
+                arrOfUsers: users
+            })
         });
     })    
 };

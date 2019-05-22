@@ -7,7 +7,6 @@ require('./controllers/passport');
 const passport = require('passport');
 const config = require('./controllers/config');
 const createUser = require('./controllers/users/create_user');
-const all_users = require('./controllers/users/all_users');
 const all_usersID = require('./controllers/users/all_usersID');
 const findUser = require('./controllers/users/find_user');
 const addTofriend = require('./controllers/users/addToFriend');
@@ -16,8 +15,9 @@ const loginUser = require('./controllers/loginuser');
 const error404 = require('./controllers/error404');
 
 const indexPath = path.join(__dirname, 'index.html');
-app.use(express.static(path.join(__dirname, 'static')));
+const findPath = path.join(__dirname, 'find.html');
 
+app.use(express.static(path.join(__dirname, 'static')));
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 
@@ -35,15 +35,16 @@ app.set('view engine', 'pug');
 app.get('/', (req, res) => {
     res.sendFile(indexPath);
 });
-
 app.post('/user', createUser);
 app.post('/login', passport.authenticate('login',{failureRedirect: '/fail', session: true}), function (req, res) {
     res.redirect('/profile');
 });
-app.get('/users', all_users);
-app.get('/user/:id', all_usersID);
-app.get('/find-user', findUser);
 app.get('/people', addTofriend);
+app.get('/find', (req, res) => {
+    res.sendFile(findPath);
+});
+app.get('/find-user', findUser);
+app.get('/user/:id', all_usersID);
 app.post('/friend/:id', addUserToMyFriend);
 app.get('/profile', loginUser);
 app.get('/logout', function (req, res) {
@@ -57,7 +58,7 @@ app.listen(config.port, err => {
     if (err) console.log(err);
     console.log('Server listen on port ' + config.port + '...');
 
-    // if (config.itsStartupServer){
-    //     opn('http://localhost:' + config.port);
-    // }
+    if (config.itsStartupServer){
+        opn('http://localhost:' + config.port);
+    }
 });
