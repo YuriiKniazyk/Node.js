@@ -1,14 +1,13 @@
 let mongoose = require('mongoose');
 let config = require('./config');
 let passport = require('passport');
-let UserModel = require('../db/dbSchema');
-let LocalStrategy = require('passport-local').Strategy;
+const UserModel = require('../db/dbSchema');
+const LocalStrategy = require('passport-local').Strategy;
 const localStorage = require('../controllers/localStorage');
 
 passport.serializeUser(function (user, done) {    
     
     localStorage.setObjItem(config.curentUserKey, user);  
-
     done(null, JSON.stringify(user));  
 });
 
@@ -16,7 +15,6 @@ passport.deserializeUser(function (strUser, done) {
 
     let data = JSON.parse(strUser);
     done(null, data);
-    
 });
 
 let strategyLocal = new LocalStrategy(
@@ -26,7 +24,7 @@ let strategyLocal = new LocalStrategy(
         passReqToCallback: true
     },
     function (req, username, password, done) {
-        console.log('u:',username, 'p:',password);
+        //console.log('u:',username, 'p:',password);
        
         try { 
             mongoose.connect(config.mongourl, {useNewUrlParser: true}, function () {
@@ -38,7 +36,7 @@ let strategyLocal = new LocalStrategy(
                     }
                 )
                 .exec(function(err, user) {
-                    console.log(user);
+                    //console.log(user);
                     if (err) throw err;
                     if (!user) user = {Message: 'ERROR!!! User is not found!!!'};
                     

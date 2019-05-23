@@ -11,7 +11,7 @@ const all_usersID = require('./controllers/users/all_usersID');
 const findUser = require('./controllers/users/find_user');
 const addTofriend = require('./controllers/users/addToFriend');
 const addUserToMyFriend = require('./controllers/users/addUserToMyFriend');
-const loginUser = require('./controllers/loginuser');
+const loginUser = require('./controllers/users/loginuser');
 const error404 = require('./controllers/error404');
 
 const indexPath = path.join(__dirname, 'index.html');

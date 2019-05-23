@@ -1,6 +1,6 @@
-let mongoose = require('mongoose');
-let friendModel = require('../../db/friendDBSchema');
-let config = require('../config');
+const mongoose = require('mongoose');
+const friendModel = require('../../db/friendDBSchema');
+const config = require('../config');
 const localStorage = require('../localStorage');
 
 module.exports = (req, res) => {

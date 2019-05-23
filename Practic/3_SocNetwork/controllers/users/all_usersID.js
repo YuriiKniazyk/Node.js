@@ -1,6 +1,6 @@
-let mongoose = require('mongoose');
-let userModel = require('../../db/dbSchema');
-let config = require('../config');
+const mongoose = require('mongoose');
+const userModel = require('../../db/dbSchema');
+const config = require('../config');
 
 module.exports = (req, res) => {
     const userId = req.params.id;
