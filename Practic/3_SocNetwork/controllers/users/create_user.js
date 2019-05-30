@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const userModel = require('../../db/dbSchema');
 const config = require('../config');
 
-module.exports = async (req, res) => {
+module.exports = async (req, res, next) => {
     try{ 
         const {name, surname, password, email} = req.body;
         const user = {
@@ -23,14 +23,15 @@ module.exports = async (req, res) => {
     
             await userModel.findOne({email: req.body.email})
             .exec(function(err, user) {
-                   console.log(user);
                 if (!user) {
                     userModel.create(newUser);  
+                    res.json(newUser)
                 } 
             });
         })
-        res.status(201).redirect('/');
+        res.status(200);
     } 
         catch(e){console.log(e);
     }
+    
 };

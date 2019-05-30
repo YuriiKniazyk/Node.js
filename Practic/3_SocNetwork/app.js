@@ -12,6 +12,7 @@ const findUser = require('./controllers/users/find_user');
 const addTofriend = require('./controllers/users/addToFriend');
 const addUserToMyFriend = require('./controllers/users/addUserToMyFriend');
 const loginUser = require('./controllers/users/loginuser');
+//const cors = require('cors');
 const error404 = require('./controllers/error404');
 
 const indexPath = path.join(__dirname, 'index.html');
@@ -29,8 +30,23 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
+// app.use(function(req, res, next) {
+//     res.header("Access-Control-Allow-Origin", "*");
+//     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+//     next();
+//   });
+
 app.set('views', 'views_pug');
 app.set('view engine', 'pug');
+
+//CORS Middleware
+app.use(function (req, res, next) {
+    //Enabling CORS
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, x-client-key, x-client-token, x-client-secret, Authorization");
+    next();
+   });
 
 app.get('/', (req, res) => {
     res.sendFile(indexPath);
