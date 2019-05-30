@@ -1,6 +1,8 @@
 const mongoose = require('mongoose');
 const userModel = require('../../db/dbSchema');
+const friendsModel = require('../../db/friendDBSchema');
 const config = require('../config');
+const localStorage = require('../localStorage');
 
 module.exports =  (req, res) => {
     
@@ -10,11 +12,15 @@ module.exports =  (req, res) => {
         userModel.find({})
         .exec(function(err, users) {
             if (err) throw err;
-            if (!users.length) users = {Message: 'ERROR!!! No records DB'};
+            
+            if (!users.length) {
+                users = {Message: 'ERROR!!! No records DB'};
+                res.json(users);
+            }
             
             res.render('user_index', {
                 title: 'Hello',
-                arrOfUsers: users
+                arrOfUsers: users,
             })
         });
     })    

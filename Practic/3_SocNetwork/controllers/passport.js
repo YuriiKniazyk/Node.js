@@ -36,14 +36,12 @@ let strategyLocal = new LocalStrategy(
                     }
                 )
                 .exec(function(err, user) {
-                    //console.log(user);
+            
                     if (err) throw err;
-                    if (!user) user = {Message: 'ERROR!!! User is not found!!!'};
-                    
-                    if (user) {
-                        done(null, user);
-                    } else {
+                    if (!user) {user = {Message: 'ERROR!!! User is not found!!!'};
                         done(null, false);
+                    } else{
+                        done(null, user);
                     }
                 });
             });

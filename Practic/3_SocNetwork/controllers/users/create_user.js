@@ -24,12 +24,9 @@ module.exports = async (req, res) => {
             await userModel.findOne({email: req.body.email})
             .exec(function(err, user) {
                    console.log(user);
-                   
-                if (user) {
-                    res.end('404');
-                } else {            
-                    userModel.create(newUser);
-                }
+                if (!user) {
+                    userModel.create(newUser);  
+                } 
             });
         })
         res.status(201).redirect('/');
