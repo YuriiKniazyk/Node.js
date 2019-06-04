@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const userModel = require('../../db/dbSchema');
 const config = require('../config');
 
-module.exports = async (req, res, next) => {
+module.exports = async (req, res) => {
     try{ 
         const {name, surname, password, email} = req.body;
         const user = {
@@ -25,11 +25,10 @@ module.exports = async (req, res, next) => {
             .exec(function(err, user) {
                 if (!user) {
                     userModel.create(newUser);  
-                    res.json(newUser)
                 } 
             });
         })
-        res.status(200);
+        res.status(200).json({succses: true});
     } 
         catch(e){console.log(e);
     }

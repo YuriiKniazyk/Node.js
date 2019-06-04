@@ -12,7 +12,7 @@ const findUser = require('./controllers/users/find_user');
 const addTofriend = require('./controllers/users/addToFriend');
 const addUserToMyFriend = require('./controllers/users/addUserToMyFriend');
 const loginUser = require('./controllers/users/loginuser');
-//const cors = require('cors');
+const cors = require('cors');
 const error404 = require('./controllers/error404');
 
 const indexPath = path.join(__dirname, 'index.html');
@@ -30,45 +30,53 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
-// app.use(function(req, res, next) {
-//     res.header("Access-Control-Allow-Origin", "*");
-//     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-//     next();
-//   });
+var whitelist = ['http://localhost:4200', 'http://example2.com']
+var corsOptions = {
+  origin: function (origin, callback) {
+    if (whitelist.indexOf(origin) !== -1 || !origin) {
+      callback(null, true)
+    } else {
+      callback(new Error('Not allowed by CORS'))
+    }
+  }
+}
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Credentials", true);
+  res.header("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT,DELETE,PATCH");
+  res.header("Access-Control-Allow-Headers", "*");
+  next();
+});
 
 app.set('views', 'views_pug');
 app.set('view engine', 'pug');
 
-//CORS Middleware
-app.use(function (req, res, next) {
-    //Enabling CORS
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT");
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, x-client-key, x-client-token, x-client-secret, Authorization");
-    next();
-   });
 
-app.get('/', (req, res) => {
-    res.sendFile(indexPath);
+
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'index.html'));
 });
-app.post('/user', createUser);
-app.post('/login', passport.authenticate('login',{failureRedirect: '/fail', session: true}), function (req, res) {
+app.post('/user', cors(corsOptions), createUser);
+app.post('/login', passport.authenticate('login',{failureRedirect: '/fail', session: true}), cors(corsOptions), function (req, res) {
     res.redirect('/profile');
 });
-app.get('/people', addTofriend);
+app.get('/people', cors(corsOptions), addTofriend);
 app.get('/find', (req, res) => {
     res.sendFile(findPath);
 });
-app.get('/find-user', findUser);
-app.get('/user/:id', all_usersID);
-app.post('/friend/:id', addUserToMyFriend);
-app.get('/profile', loginUser);
-app.get('/logout', function (req, res) {
+app.get('/find-user', cors(corsOptions), findUser);
+app.get('/user/:id', cors(corsOptions), all_usersID);
+app.post('/friend/:id', cors(corsOptions), addUserToMyFriend);
+app.get('/profile', cors(corsOptions), loginUser);
+app.get('/logout', cors(corsOptions), function (req, res) {
     req.logout();
     res.redirect('/');
 });
 
-app.use('*', error404);
+// app.use('*', error404);
+app.use('*', (req, res)=>{
+  res.json(2222)
+});
 
 app.listen(config.port, err => {
     if (err) console.log(err);
