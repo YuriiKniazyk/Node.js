@@ -23,9 +23,9 @@ let strategyLocal = new LocalStrategy(
         usernameField: 'name',
         passReqToCallback: true
     },
+    
     function (req, username, password, done) {
         //console.log('u:',username, 'p:',password);
-       
         try { 
             mongoose.connect(config.mongourl, {useNewUrlParser: true}, function () {
                             

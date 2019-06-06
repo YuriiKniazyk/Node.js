@@ -15,9 +15,6 @@ const loginUser = require('./controllers/users/loginuser');
 const cors = require('cors');
 const error404 = require('./controllers/error404');
 
-const indexPath = path.join(__dirname, 'index.html');
-const findPath = path.join(__dirname, 'find.html');
-
 app.use(express.static(path.join(__dirname, 'static')));
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
@@ -30,7 +27,7 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
-var whitelist = ['http://localhost:4200', 'http://example2.com']
+var whitelist = ['http://localhost:4200', 'http://localhost:3000']
 var corsOptions = {
   origin: function (origin, callback) {
     if (whitelist.indexOf(origin) !== -1 || !origin) {
@@ -41,30 +38,22 @@ var corsOptions = {
   }
 }
 app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Origin", '*');
   res.header("Access-Control-Allow-Credentials", true);
   res.header("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT,DELETE,PATCH");
-  res.header("Access-Control-Allow-Headers", "*");
+  res.header("Access-Control-Allow-Headers", '*');
   next();
 });
 
 app.set('views', 'views_pug');
 app.set('view engine', 'pug');
 
-
-
-app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, 'index.html'));
-});
-app.post('/user', cors(corsOptions), createUser);
-app.post('/login', passport.authenticate('login',{failureRedirect: '/fail', session: true}), cors(corsOptions), function (req, res) {
+app.post('/user',cors(corsOptions), createUser);
+app.post('/login', passport.authenticate('login',{failureRedirect: '/fail', session: true}), function (req, res) {
     res.redirect('/profile');
 });
-app.get('/people', cors(corsOptions), addTofriend);
-app.get('/find', (req, res) => {
-    res.sendFile(findPath);
-});
-app.get('/find-user', cors(corsOptions), findUser);
+app.get('/people',cors(corsOptions), addTofriend);
+app.get('/find-user',cors(corsOptions), findUser);
 app.get('/user/:id', cors(corsOptions), all_usersID);
 app.post('/friend/:id', cors(corsOptions), addUserToMyFriend);
 app.get('/profile', cors(corsOptions), loginUser);
@@ -72,14 +61,9 @@ app.get('/logout', cors(corsOptions), function (req, res) {
     req.logout();
     res.redirect('/');
 });
-
-// app.use('*', error404);
-app.use('*', (req, res)=>{
-  res.json(2222)
-});
+app.use('*',cors(corsOptions), error404);
 
 app.listen(config.port, err => {
-    if (err) console.log(err);
     console.log('Server listen on port ' + config.port + '...');
 
     if (config.itsStartupServer){
