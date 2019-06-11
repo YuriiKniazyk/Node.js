@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { HttpClient } from '@angular/common/http'
 
 @Component({
   selector: 'app-friend-id',
@@ -6,9 +7,7 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./friend-id.component.css']
 })
 export class FriendIdComponent implements OnInit {
-
-  constructor() { }
-
+  constructor(private http: HttpClient) { }
   ngOnInit() {
   }
 

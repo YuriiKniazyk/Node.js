@@ -3,6 +3,7 @@ const session = require('express-session');
 const path = require('path');
 const app = express();
 const opn = require('opn');
+const cors = require('cors');
 require('./controllers/passport');
 const passport = require('passport');
 const config = require('./controllers/config');
@@ -12,7 +13,6 @@ const findUser = require('./controllers/users/find_user');
 const addTofriend = require('./controllers/users/addToFriend');
 const addUserToMyFriend = require('./controllers/users/addUserToMyFriend');
 const loginUser = require('./controllers/users/loginuser');
-const cors = require('cors');
 const error404 = require('./controllers/error404');
 
 app.use(express.static(path.join(__dirname, 'static')));
@@ -48,6 +48,9 @@ app.use((req, res, next) => {
 app.set('views', 'views_pug');
 app.set('view engine', 'pug');
 
+app.get('/', (req,res) =>{
+  res.sendFile(path.join(__dirname, 'index.html'));
+});
 app.post('/user',cors(corsOptions), createUser);
 app.post('/login', passport.authenticate('login',{failureRedirect: '/fail', session: true}), function (req, res) {
     res.redirect('/profile');
